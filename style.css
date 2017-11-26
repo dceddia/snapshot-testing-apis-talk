@@ -1,0 +1,25 @@
+.plain {
+  border: none;
+  box-shadow: none;
+  background-color: transparent !important;
+}
+
+.lumbergh {
+  height: 50vh;
+}
+
+.all-the-things {
+  height: 50vh;
+}
+
+.keep-calm {
+  height: 50vh;
+}
+
+.book {
+	height: 25vh;
+}
+
+.bleach {
+	height: 200px;
+}
