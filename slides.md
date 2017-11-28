@@ -131,6 +131,12 @@ Note:
 No more broken APIs.
 
 Note:
+
+* nice middle ground
+* tests are easy to write
+* tests run fast
+* Jest test framework comes with support out of the box
+
 Show of hands:
 - Who's heard of snapshot testing?
 - Who's already using it?
@@ -145,7 +151,9 @@ Cool, so here's a quick overview if you're not familiar.
 
 Note:
 
-The idea is that if you have a React component like this...
+* start off with a React component
+* simple one: a List that accepts items
+* renders the items
 
 ---
 
@@ -155,7 +163,10 @@ The idea is that if you have a React component like this...
 
 Note:
 
-You can write a really simple test that renders the component in memory and checks it against a snapshot.
+* then, write a test
+* renders the List with some test data
+* expects the rendered component to match the snapshot on disk
+* first run, there is NO snapshot on disk...
 
 ---
 
@@ -165,7 +176,11 @@ You can write a really simple test that renders the component in memory and chec
 
 Note:
 
-The first time you run it, there's no saved snapshot, so the test will pass. So you want to make sure that the component is correct before you run the test!
+* it writes out the snapshot
+* test passes
+* important: component should be correct before running the test!
+* unless you're ok with some failures as you build out the component
+* not TDD
 
 ---
 
@@ -173,9 +188,11 @@ The first time you run it, there's no saved snapshot, so the test will pass. So 
 
 Note:
 
-Then every time after that, when you run the test, it will compare the rendered snapshot with the one on disk, and fail the test if they don't match.
-
-This gives you a quick way to make sure if something works ONCE, it KEEPS WORKING, and alerts you if it breaks.
+* snapshot gets checked into source control
+* later test runs will compare against disk snapshot
+* fail if snapshot doesn't match
+* works ONCE, then KEEPS WORKING
+* alerts you if broken
 
 ---
 
@@ -195,6 +212,15 @@ expect(...).toMatchSnapshot()
 }
 ```
 
+Note:
+
+* quick aside: toMatchSnapshot is not built into Jest
+* (scroll back to usage slide)
+* makes the tests a little easier to write
+* easy to add
+
+So snapshot tests are pretty cool...
+
 ---
 
 but...
@@ -203,7 +229,9 @@ but...
 
 Note:
 
-But: fun fact! You can take snapshots of anything!
+* but, fun fact
+
+NEXT SLIDE
 
 ---
 
@@ -213,15 +241,19 @@ But: fun fact! You can take snapshots of anything!
 
 `).toMatchSnapshot()`
 
+* you can take snapshots of basically anything!
+* not just React components
+* can be objects, arrays, numbers, strings...
+
 ---
 
 <img src="snapshot-all-the-things.png" class="plain all-the-things"/>
 
 Note:
 
-you can basically snapshot anything
-
-including API responses
+* pretty much anything
+* *including* responses from your API!
+* so here we go:
 
 ---
 
@@ -232,6 +264,13 @@ including API responses
   <li class="fragment">Rest easy.</li>
 </ol>
 
+
+Note:
+
+* make api call
+* snapshot result
+* relax, knowing the snapshot test will let you know if your API contract has been broken
+* now, one thing to note....
 
 ---
 
@@ -244,7 +283,13 @@ including API responses
 
 Note:
 
-Here's an example of one of these tests
+* these tests will be calling your REAL api.
+* need a running server
+* clean data
+* test 1) lists users, test 2) creates a user
+* if list expects to see 2 users returned, and data isn't being reset between test runs, it will break.
+
+* let's look at an example
 
 ---
 
@@ -266,11 +311,16 @@ Note:
 * then it expects that the response matches the snapshot
 * using async/await
 * the `await` just pauses on that line until the promise resolves
-* the `async` marks the function as asynchronous, so it can contain `await`.
+* then here is the snapshot...
 
 ---
 
 <img src="snapshot-login-success.png" class="plain"/>
+
+Note:
+
+* almost like running JSON.stringify on the response
+* here's another example...
 
 ---
 
@@ -288,13 +338,35 @@ test('failed login (bad password)', async () => {
 });
 -->
 
+Note:
+
+* calls the same Login API
+* does not care about the response
+* Login call should throw an error, because login should fail
+* checks the response data against the snapshot
+* why data, not full response?
+* full response object has lots of gory detail that you probably don't care about
+* maybe check status code?
+* but mainly concerned with the data
+* here's the snapshot
+
 ---
 
 <img src="snapshot-login-error.png" class="plain"/>
 
+Note:
+
+* just a plain object
+* with an error message
+* if API starts returning arrays, this test will catch that quickly
+
 ---
 
 <img src="snapshot-login-success.png" class="plain"/>
+
+* here's the success response from earlier
+* notice it has a timestamp
+* this could be a problem for your snapshot tests
 
 ---
 
@@ -310,10 +382,13 @@ Sanitize them.
 </ul>
 
 Note:
-some things change! don't let them break your tests.
 
-Sanitize things like randomized IDs, Timestamps,
-anything that might change between responses.
+* in general, watch out for things that can change
+* randomized or autoincrementing IDs...
+* timestamps
+* anything that could change between responses
+* or between test runs
+* here's an example of making a request for data that will change...
 
 ---
 
@@ -329,16 +404,21 @@ test('createOrder', async () => {
 
 
 Note:
-here's an example of testing something that changes
-
-we make an API call to buy a camera for an ominous price
-
-then pass the result through the *sanitize* function,
-giving it an array of keys to sanitize
+* make an API call to buy a camera
+* for some reason the user gets to specify the price
+* the resulting order has `id` and `created_at` fields
+* pass the order through sanitize function
+* then expect sanitized order to match snapshot
+* here's the resulting snapshot...
 
 ---
 
 <img src="snapshot-create-order.png" class="plain" width="50%" />
+
+Note:
+
+* the unstable properties have been sanitized
+* so here is the sanitize function...
 
 ---
 
@@ -359,6 +439,37 @@ function sanitize(data, keys) {
   }, data);
 }
 -->
+
+* takes the data object, and an array of keys
+* (go back to calling code)
+* loops over the keys
+* starts with the original data as initial value
+* fetches that key
+* ignores it if undefined, or a complex type
+* don't want to sanitize whole objects
+* sanitize the minimal amount of data
+* if it finds the value, it makes a copy of the result and changes the value
+* yeah, half immutable...
+* uses lodash: lets you specify deeply-nested keys
+* like...
+
+---
+
+`items[0].manufacturer.id`
+
+Note:
+
+* this is pretty nice
+* safely handles undefined links in the chain
+
+---
+
+## 3 Steps To Success
+<ol>
+  <li class="fragment">Make an API call.</li>
+  <li class="fragment">Snapshot the result.</li>
+  <li class="fragment">Rest easy.</li>
+</ol>
 
 ---
 
