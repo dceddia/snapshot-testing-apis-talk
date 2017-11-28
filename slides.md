@@ -477,6 +477,10 @@ Note:
 
 ---
 
+[daveceddia.com/talks/snapshot-testing-apis](https://daveceddia.com/talks/snapshot-testing-apis/)
+
+<br/>
+
 ## Dave Ceddia
 
 @dceddia
@@ -486,10 +490,13 @@ Note:
 <div style="line-height:0;">
 	<img src="pure-react-3d-cover.svg" class="plain book"/>
 	<br/>
-	<a href="purereact.com" class="pure-react-link">purereact.com</a>
+	<a href="http://purereact.com" class="pure-react-link">purereact.com</a>
 </div>
 
-<!-- <img src="https://daveceddia.com/images/pure-react-3d-cover.svg" alt="book cover" height="200" style="border: none;"/> -->
+Note:
 
-Note: dceddia on the interwebz. Blog about React
+* Say hi on Twitter @dceddia
+* I write weekly-ish articles about React at daveceddia.com
+* just starting to learn? Pure React! learn a little faster
+
 
