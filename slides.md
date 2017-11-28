@@ -241,6 +241,8 @@ NEXT SLIDE
 
 `).toMatchSnapshot()`
 
+Note:
+
 * you can take snapshots of basically anything!
 * not just React components
 * can be objects, arrays, numbers, strings...
@@ -363,6 +365,8 @@ Note:
 ---
 
 <img src="snapshot-login-success.png" class="plain"/>
+
+Note:
 
 * here's the success response from earlier
 * notice it has a timestamp
