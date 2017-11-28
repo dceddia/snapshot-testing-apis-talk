@@ -14,7 +14,9 @@ Dave Ceddia
 
 Note:
 
-Hey I'm Dave Ceddia, and I want to tell you about a simple way you can improve your development process with snapshot testing.
+* Hey I'm Dave Ceddia
+* snapshot testing applied to APIs
+* how it might be able to improve your development process
 
 So let me set the stage here...
 
@@ -23,35 +25,38 @@ So let me set the stage here...
 `$ git pull`
 
 Note:
-Do a build, start everything up... **NEXT**
+
+* Pull down the latest code
+* Do a build, start up the app
+* And the first thing you do...
 
 ---
 
 <img src="signin-form.png" class="plain"/>
 
 Note:
-And when you go to log in, you type the password wrong.
 
-But instead of... **NEXT**
+* ...is screw up the password
 
 ---
 
 <img src="signin-form-error.png" class="plain"/>
 
 Note:
-the normal error message...
+
+* but instead of getting this error
 
 ---
 
 <img src="exception.png" />
 
 Note:
-You get this one instead.
 
-Because for some reason the response from the server wasn't what you expected.
-
-Well it doesn't seem like it's your code's fault,
-so take a walk over to the backend team...
+* you get this one instead
+* response from server wasn't what you expected
+* you check the code; it looks right
+* you check the data; it looks wrong
+* so you walk over to the backend team
 
 ---
 
@@ -61,9 +66,9 @@ Note:
 
 Hey guys, so, what happened to the error response on login? It's not an object anymore?
 
-And they go:
+"Yeah! We changed it. We return an array now"
 
-"Yeah! We changed it. We return an array now, because you never know when we might need to support more than one error."
+we told you about it in standup
 
 ---
 
@@ -72,20 +77,19 @@ And they go:
 
 Note:
 
-"We TOLD you about it in standup"
+And there was a slack message too
 
-And there was a slack message
+And your boss is like:
 
-And your boss chimes in like:
-
-yeah didn't you see that?
+yeah didn't you see that message?
 
 ---
 
 <img src="lumbergh.jpg" class="lumbergh"/>
 
 Note:
-So now you're wondering who's really to blame here, and starting to think it might be you.
+
+* at this point you're starting to accept that this is... probably your fault after all.
 
 ---
 
@@ -97,27 +101,28 @@ So now you're wondering who's really to blame here, and starting to think it mig
 
 Note:
 
-But wouldn't it be nice if you had some tests that could catch this kind of failure?
+But wouldn't it be cool if you had some kind of test that could catch this error early?
 
-Before it ripped your team apart?
+like, Before it ripped your team apart?
 
 ---
 
 ## End-to-end testing?
 
 <ul>
-  <li class="fragment">Slow to write</li>
-  <li class="fragment">Slow to run</li>
+  <li class="fragment">Difficult to write</li>
   <li class="fragment">Brittle</li>
+  <li class="fragment">Slow to run</li>
 </ul>
 
 Note:
 
-E2E testing might be your first thought.
-
-This is where you'd write tests with a tool like Selenium or Nightwatch, and run them in a real browser against a running copy of your app. But it has some downsides.
-
-**DO BULLETS**
+* first thought: E2E
+* aka Acceptance, Integration
+* write tests w/ tool like Selenium or Nightwatch
+* run them in a real browser
+* value: they test the whole stack
+* some downsides...
 
 ---
 
